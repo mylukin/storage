@@ -1,0 +1,38 @@
+networks:
+  storage-mongo:
+    driver: bridge
+
+services:
+  mongo:
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    build:
+      context: ./docker
+      dockerfile: ./Dockerfile
+      target: mongo
+    command: --journal --auth --bind_ip_all --replSet rs0 --keyFile /mongo.key --enableMajorityReadConcern false --wiredTigerCacheSizeGB 64
+    ports:
+      - 27017:27017
+    networks:
+      - storage-mongo
+    env_file: ./.env
+    volumes:
+      - "/data:/data/db"
+
+  mongo-express:
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - storage-mongo
+    env_file: ./.env
+    image: mongo-express:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"

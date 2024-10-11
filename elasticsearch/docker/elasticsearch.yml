@@ -1,0 +1,14 @@
+cluster.name: "docker-cluster"
+cluster.initial_master_nodes:
+  - es01
+  - es02
+discovery.seed_hosts:
+  - es01.example.com
+  - es02.example.com
+  - es03.example.com
+network.host: 0.0.0.0
+network.bind_host: 0.0.0.0
+http.port: 9200
+transport.port: 9300
+thread_pool.search.size: 20
+thread_pool.search.queue_size: 1000
