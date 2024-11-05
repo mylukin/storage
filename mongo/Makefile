@@ -16,16 +16,16 @@ logs:
 	docker logs -f --tail 100 $$(docker container ls -a | grep '\-mongo' | grep -v "mongo-express" | awk '{print $$1}')
 
 bash:
-	docker run -it --network $$(docker network ls | grep 'mytgbot-mongo' | awk '{print $$2}') --rm mongo:7 mongo \
+	docker run -it --network $$(docker network ls | grep 'test-mongo' | awk '{print $$2}') --rm mongo:7 mongo \
 	--host $$(docker ps | grep '\-mongo' | grep -v "mongo-express" | awk '{print $$NF}') \
-	-u${MONGO_INITDB_ROOT_USERNAME} -p${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase=admin mytgbot
+	-u${MONGO_INITDB_ROOT_USERNAME} -p${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase=admin test
 
 stat:
-	docker run -it --network $$(docker network ls | grep 'mytgbot-mongo' | awk '{print $$2}') --rm mongo:7 mongostat \
+	docker run -it --network $$(docker network ls | grep 'test-mongo' | awk '{print $$2}') --rm mongo:7 mongostat \
         --host $$(docker ps | grep '\-mongo' | grep -v "mongo-express" | awk '{print $$NF}') \
         -u${MONGO_INITDB_ROOT_USERNAME} -p${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase=admin
 
 top:
-	docker run -it --network $$(docker network ls | grep 'mytgbot-mongo' | awk '{print $$2}') --rm mongo:7 mongotop \
+	docker run -it --network $$(docker network ls | grep 'test-mongo' | awk '{print $$2}') --rm mongo:7 mongotop \
         --host $$(docker ps | grep '\-mongo' | grep -v "mongo-express" | awk '{print $$NF}') \
         -u${MONGO_INITDB_ROOT_USERNAME} -p${MONGO_INITDB_ROOT_PASSWORD} --authenticationDatabase=admin
