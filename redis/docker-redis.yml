@@ -1,0 +1,38 @@
+networks:
+  storage-redis:
+    driver: bridge
+
+services:
+  redis:
+    hostname: redis
+    image: redis/redis-stack:latest
+    restart: always
+    ports:
+      - 6379:6379
+      - 8001:8001
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    networks:
+      - storage-redis
+    env_file: ./.env
+    volumes:
+      - "./data/redis:/data"
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    ports:
+      - 8002:8081
+    networks:
+      - storage-redis
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    depends_on:
+      - redis
+    env_file: ./.env

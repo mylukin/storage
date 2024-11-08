@@ -1,0 +1,47 @@
+networks:
+  storage-es:
+    driver: bridge
+
+services:
+  es:
+    restart: always
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - storage-es
+    image: es:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "5"
+    build:
+      context: ./docker
+      dockerfile: ./Dockerfile
+      target: es
+    environment:
+      - node.name=${NODE_NAME}
+      - network.publish_host=${NODE_NAME}.example.com
+      - node.roles=${NODE_ROLES}
+      - bootstrap.memory_lock=true
+      - TAKE_FILE_OWNERSHIP=true
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - "./data:/usr/share/elasticsearch/data"
+      - "./docker/IKAnalyzer.cfg.xml:/usr/share/elasticsearch/config/analysis-ik/IKAnalyzer.cfg.xml"
+      - "./docker/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml"
+
+  elastichq:
+    restart: always
+    ports:
+      - 5000:5000
+    networks:
+      - storage-es
+    image: elastichq/elasticsearch-hq:latest
+    environment:
+      - HQ_DEFAULT_URL=http://${NODE_NAME}.example.com
