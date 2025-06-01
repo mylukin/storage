@@ -1,8 +1,8 @@
 start:
-	docker-compose --env-file ./.env -f ./es.yml up -d --build
+	docker compose --env-file ./.env -f ./es.yml up -d --build
 
 stop:
-	docker-compose --env-file ./.env -f ./es.yml down
+	docker compose --env-file ./.env -f ./es.yml down
 
 restart: stop start
 

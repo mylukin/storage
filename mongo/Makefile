@@ -2,13 +2,13 @@ MONGO_INITDB_ROOT_USERNAME:=$(shell cat .env | grep "MONGO_INITDB_ROOT_USERNAME"
 MONGO_INITDB_ROOT_PASSWORD:=$(shell cat .env | grep "MONGO_INITDB_ROOT_PASSWORD" | awk -F '=' '{print $$2}')
 
 start:
-	docker-compose -f ./mongo.yml up -d --build
+	docker compose -f ./mongo.yml up -d --build
 
 stop:
-	docker-compose -f ./mongo.yml down
+	docker compose -f ./mongo.yml down
 
 repair:
-	docker-compose -f ./mongo.yml run mongo mongod --repair
+	docker compose -f ./mongo.yml run mongo mongod --repair
 
 restart: stop start
 
